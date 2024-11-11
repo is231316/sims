@@ -1,11 +1,12 @@
 ﻿@page "/"
 @using System.ComponentModel.DataAnnotations
+@rendermode InteractiveServer
 
 <PageTitle>Welcome to Sims!</PageTitle>
 
 <h1>Login</h1>
 
-<EditForm Model="@loginModel" OnValidSubmit="HandleLogin" @ref="loginForm">
+<EditForm Model="@loginModel" FormName="LoginForm" OnSubmit="HandleLogin" @ref="loginForm">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
@@ -43,9 +44,9 @@
 
     private void HandleLogin()
     {
-        // Handle the login logic here
-        // This is where you can make API calls for authentication or other logic
-        Console.WriteLine($"Username: {loginModel.Username}, Password: {loginModel.Password}");
+        bool success = Shared.PasswordManagement.VerifyPassword(loginModel.Username, loginModel.Password);
+        Console.WriteLine(success);
+        //Toggle Visibility to true, so that the logged in user can created incidents
     }
 
     public class LoginModel

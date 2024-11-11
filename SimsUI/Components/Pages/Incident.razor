@@ -1,5 +1,6 @@
 ﻿@page "/incident"
 @using System.ComponentModel.DataAnnotations
+@rendermode InteractiveServer
 
 <PageTitle>Incident Form</PageTitle>
 
@@ -18,13 +19,13 @@
     <!-- Title Input -->
     <div style="margin-bottom: 15px;">
         <h5>Title</h5>
-        <InputText @bind-Value="incidentModel.Title" class="form-control" placeholder="Incident Title" />
+        <InputText @bind-Value="incidentModel.Title" class="form-control" placeholder="Title" />
     </div>
 
     <!-- Description Textarea -->
     <div style="margin-bottom: 15px;">
         <h5>Description</h5>
-        <InputTextArea @bind-Value="incidentModel.Description" class="form-control" placeholder="Incident Description" />
+        <InputTextArea @bind-Value="incidentModel.Description" class="form-control" placeholder="Description" />
     </div>
 
     <!-- Enum Type Selector (Ticket, Issue, Information, Problem) -->
@@ -69,7 +70,7 @@
         {
             // Define the API endpoint
             var apiUrl = "http://localhost:5076/api/incidents"; // Replace with your actual API URL
-            Console.WriteLine("ICH HAB HUNGER");
+            
             // Send POST request with IncidentModel as JSON
             var response = await Http.PostAsJsonAsync(apiUrl, incidentModel);
 

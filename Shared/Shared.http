@@ -1,6 +1,19 @@
 @Shared_HostAddress = http://localhost:5076
 
-GET {{Shared_HostAddress}}/weatherforecast/
+POST {{Shared_HostAddress}}/api/incidents
+Content-Type: application/json
 Accept: application/json
+
+{
+    "incident": {
+        "IncidentDate": "2024-11-10T00:00:00Z",
+        "Title": "Test Incident",
+        "Description": "Test Description for Incident",
+        "IncidentType": "Ticket",
+        "IsClosed": false
+    }
+}
+
+
 
 ###

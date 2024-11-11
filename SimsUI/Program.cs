@@ -12,6 +12,10 @@ namespace SimsUI
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
+			builder.Services.AddHttpClient();
+
+			//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:7287/api/incidents") });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

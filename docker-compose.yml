@@ -1,25 +1,9 @@
-version: '3.8'
-
+version: '3'
 services:
-  incident-db:
-    image: mysql:8.0
-    container_name: incident_db
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword   # Replace with a secure password
-      MYSQL_DATABASE: incident_db
-      MYSQL_USER: incident_user
-      MYSQL_PASSWORD: incident_password   # Replace with a secure password
-    volumes:
-      - incident_data:/var/lib/mysql
+  redis:
+    image: redis:latest
+    container_name: my-redis-container
     ports:
-      - "3306:3306"   # Expose MySQL on port 3306
-    networks:
-      - incident_network
-
-networks:
-  incident_network:
-    driver: bridge
-
-volumes:
-  incident_data:
-    driver: local
+      - "6379:6379"
+    volumes:
+      - ./data:/data
