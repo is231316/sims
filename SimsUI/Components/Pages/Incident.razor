@@ -1,0 +1,176 @@
+﻿@page "/incident"
+@using System.ComponentModel.DataAnnotations
+
+<PageTitle>Incident Form</PageTitle>
+
+<h1>Incident</h1>
+
+<EditForm Model="@incidentModel" FormName="IncidentForm" OnSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <!-- Date Picker -->
+    <div style="margin-bottom: 15px;">
+        <h5>Date</h5>
+        <InputDate @bind-Value="incidentModel.IncidentDate" class="form-control" />
+    </div>
+
+    <!-- Title Input -->
+    <div style="margin-bottom: 15px;">
+        <h5>Title</h5>
+        <InputText @bind-Value="incidentModel.Title" class="form-control" placeholder="Incident Title" />
+    </div>
+
+    <!-- Description Textarea -->
+    <div style="margin-bottom: 15px;">
+        <h5>Description</h5>
+        <InputTextArea @bind-Value="incidentModel.Description" class="form-control" placeholder="Incident Description" />
+    </div>
+
+    <!-- Enum Type Selector (Ticket, Issue, Information, Problem) -->
+    <div style="margin-bottom: 15px;">
+        <h5>Type</h5>
+        <InputSelect @bind-Value="incidentModel.IncidentType" class="form-control">
+            <option value="Ticket">Ticket</option>
+            <option value="Issue">Issue</option>
+            <option value="Information">Information</option>
+            <option value="Problem">Problem</option>
+        </InputSelect>
+    </div>
+
+    <!-- Checkbox for "Closed" -->
+    <div style="margin-bottom: 15px;">
+        <InputCheckbox @bind-Value="incidentModel.IsClosed" /> <span>Closed</span>
+    </div>
+
+    <!-- Line separator -->
+    <hr />
+
+    <!-- Action Buttons -->
+    <div style="margin-top: 20px;">
+        <button type="submit" class="btn-save">
+            Save Incident
+        </button>
+
+        <button type="button" @onclick="Escalate" class="btn-escalate">
+            Escalate
+        </button>
+    </div>
+</EditForm>
+
+@code {
+    @inject HttpClient Http
+    // [SupplyParameterFromForm(FormName = "IncidentForm")]
+    private IncidentModel incidentModel = new IncidentModel();
+
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            // Define the API endpoint
+            var apiUrl = "http://localhost:5076/api/incidents"; // Replace with your actual API URL
+            Console.WriteLine("ICH HAB HUNGER");
+            // Send POST request with IncidentModel as JSON
+            var response = await Http.PostAsJsonAsync(apiUrl, incidentModel);
+
+            // Check if the response was successful
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"Incident Saved: {incidentModel.Title}, Date: {incidentModel.IncidentDate}, Type: {incidentModel.IncidentType}, Closed: {incidentModel.IsClosed}");
+                // You could also add a message to notify the user that the submission was successful
+            }
+            else
+            {
+                Console.WriteLine("Failed to save incident: " + response.ReasonPhrase);
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle any exceptions that occur during the request
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
+    }
+
+    private void Escalate()
+    {
+        // Handle escalation logic here (e.g., notify or change status)
+        Console.WriteLine("Incident Escalated!");
+    }
+
+    public class IncidentModel
+    {
+        public IncidentModel()
+        {
+            IncidentDate = DateTime.Now;
+        }
+
+        [Required]
+        public DateTime IncidentDate { get; set; }
+
+        [Required]
+        public string Title { get; set; }
+
+        [Required]
+        public string Description { get; set; }
+
+        [Required]
+        public IncidentType IncidentType { get; set; }
+
+        public bool IsClosed { get; set; }
+    }
+
+    public enum IncidentType
+    {
+        Ticket,
+        Issue,
+        Information,
+        Problem
+    }
+}
+
+<style>
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    h5 {
+        margin-bottom: 5px;
+    }
+
+    .btn-save {
+        background-color: green;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+        .btn-save:hover {
+            background-color: darkgreen;
+        }
+
+    .btn-escalate {
+        background-color: orange;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+        .btn-escalate:hover {
+            background-color: darkorange;
+        }
+
+    hr {
+        margin: 20px 0;
+    }
+</style>
