@@ -37,25 +37,30 @@ namespace Shared.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("longtext")
-                        .HasColumnName("description");
+                        .HasColumnName("description")
+                        .HasAnnotation("Relational:JsonPropertyName", "description");
 
                     b.Property<DateTime>("IncidentDate")
                         .HasColumnType("datetime(6)")
-                        .HasColumnName("incident_date");
+                        .HasColumnName("incident_date")
+                        .HasAnnotation("Relational:JsonPropertyName", "incident_date");
 
                     b.Property<string>("IncidentType")
                         .IsRequired()
                         .HasColumnType("longtext")
-                        .HasColumnName("incident_type");
+                        .HasColumnName("incident_type")
+                        .HasAnnotation("Relational:JsonPropertyName", "incident_type");
 
                     b.Property<bool>("IsClosed")
                         .HasColumnType("tinyint(1)")
-                        .HasColumnName("is_closed");
+                        .HasColumnName("is_closed")
+                        .HasAnnotation("Relational:JsonPropertyName", "is_closed");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("longtext")
-                        .HasColumnName("title");
+                        .HasColumnName("title")
+                        .HasAnnotation("Relational:JsonPropertyName", "title");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)")
