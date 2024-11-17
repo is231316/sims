@@ -1,0 +1,167 @@
+﻿@page "/search"
+@using System.ComponentModel.DataAnnotations
+@using System.Text.Json
+@rendermode InteractiveServer
+
+<PageTitle>Incident Form</PageTitle>
+
+<h1>Incident</h1>
+
+<EditForm Model="@incidentModel" FormName="SearchForm" OnSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+
+    <!-- Enum Type Selector (Ticket, Issue, Information, Problem) -->
+    <div style="margin-bottom: 15px;">
+        <h5>Type</h5>
+        <InputSelect @bind-Value="incidentModel.IncidentType" class="form-control">
+            <option value="Ticket">Ticket</option>
+            <option value="Issue">Issue</option>
+            <option value="Information">Information</option>
+            <option value="Problem">Problem</option>
+        </InputSelect>
+    </div>
+
+    <!-- Checkbox for "Closed" -->
+    <div style="margin-bottom: 15px;">
+        <InputCheckbox @bind-Value="incidentModel.IsClosed" /> <span>Closed</span>
+    </div>
+
+    <!-- Line separator -->
+    <hr />
+
+    <!-- Action Buttons -->
+    <div style="margin-top: 20px;">
+        <button type="submit" class="btn-save">
+            Search
+        </button>
+    </div>
+</EditForm>
+
+<!-- Display Search Results -->
+@if (IncidentsList != null && IncidentsList.Any())
+{
+    <h3>Search Results</h3>
+
+    @foreach (var incident in IncidentsList)
+    {
+        <div style="border-bottom: 1px solid #ddd; padding: 10px; margin-bottom: 10px;">
+            <strong>Date:</strong> @incident.IncidentDate.ToShortDateString() <br />
+            <strong>Title:</strong> @incident.Title <br />
+            <strong>Reporter:</strong> @incident.IsClosed <br />
+            <strong>Type:</strong> @incident.IncidentType <br />
+            <strong>Description:</strong> @incident.Description <br />
+        </div>
+    }
+}
+else if (IncidentsList != null)
+{
+    <p>No incidents found matching the criteria.</p>
+}
+
+@code {
+    @inject HttpClient Http
+    private IncidentModel incidentModel = new IncidentModel();
+    private List<IncidentModel> IncidentsList { get; set; } = new List<IncidentModel>();
+
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            // Define the base API endpoint
+            var apiUrl = "http://localhost:5076/api/incidents/search"; // Replace with your actual API endpoint for search
+
+            // Add query parameters to the URL for IncidentType and IsClosed
+            var queryUrl = $"{apiUrl}?type={incidentModel.IncidentType}&closed={incidentModel.IsClosed}";
+
+            // Send GET request with query parameters
+            var response = await Http.GetAsync(queryUrl);
+
+            // Check if the response was successful
+            if (response.IsSuccessStatusCode)
+            {
+                // Read and deserialize the JSON response
+                var json = await response.Content.ReadAsStringAsync();
+                IncidentsList = JsonSerializer.Deserialize<List<IncidentModel>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                // Do something with the incidents, e.g., update the UI or assign to a property
+                // For example: this.IncidentsList = incidents;
+            }
+            else
+            {
+                Console.WriteLine("Failed to retrieve incidents: " + response.ReasonPhrase);
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle any exceptions that occur during the request
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
+    }
+
+
+
+    public class IncidentModel
+    {
+        public IncidentModel()
+        {
+            IncidentDate = DateTime.Now;
+        }
+
+        [Required]
+        public DateTime IncidentDate { get; set; }
+
+        [Required]
+        public string Title { get; set; }
+
+        [Required]
+        public string Description { get; set; }
+
+        [Required]
+        public IncidentType IncidentType { get; set; }
+
+        public bool IsClosed { get; set; }
+    }
+
+    public enum IncidentType
+    {
+        Ticket,
+        Issue,
+        Information,
+        Problem
+    }
+}
+
+<style>
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    h5 {
+        margin-bottom: 5px;
+    }
+
+    .btn-save {
+        background-color: green;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+        .btn-save:hover {
+            background-color: darkgreen;
+        }
+
+    hr {
+        margin: 20px 0;
+    }
+</style>

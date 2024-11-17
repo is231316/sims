@@ -45,8 +45,7 @@
     private void HandleLogin()
     {
         bool success = Shared.PasswordManagement.VerifyPassword(loginModel.Username, loginModel.Password);
-        Console.WriteLine(success);
-        //Toggle Visibility to true, so that the logged in user can created incidents
+        Shared.PasswordManagement.isLoggedIn = success;
     }
 
     public class LoginModel
