@@ -13,6 +13,7 @@ namespace Shared
         public static string Username { get; set; }
         private static readonly string _password;
         public static bool isLoggedIn;
+        public static string userRole;
 
         private static string HashPassword(string password)
         {
@@ -26,14 +27,18 @@ namespace Shared
 
         public static bool VerifyPassword(string username, string password)
         {
-            string storedPassword = redisDatabase.StringGet(username);
+            var userData = redisDatabase.HashGetAll(username);
                 
-            if (string.IsNullOrEmpty(storedPassword))
+            if (string.IsNullOrEmpty(username))
             {
                 return false;
             }
 
-            string hashedPassword = HashPassword(password);
+			var storedPassword = userData.FirstOrDefault(field => field.Name == "password").Value;
+            var role = userData.FirstOrDefault(field => field.Name == "role").Value;
+
+			string hashedPassword = HashPassword(password);
+            userRole = role;
 
             return storedPassword == hashedPassword;
         }
