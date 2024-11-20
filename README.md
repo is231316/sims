@@ -1,122 +1,178 @@
-# sims
-# Projektname: Dockerisierte Webanwendung mit REST-API, MSSQL und Redis-Integration
+# Project => SIMS (Incident Management System)
 
-## Übersicht
-Dieses Projekt zielt darauf ab, eine moderne, skalierbare und containerisierte Lösung unter Verwendung verschiedener Technologien zu entwickeln. Es besteht aus einer Webanwendung, einer Konsolenanwendung, einer RESTful User API, einer MSSQL RDBMS und einer Redis NoSQL-Datenbank, die alle innerhalb von Docker orchestriert werden. Diese Lösung wurde mit .NET 8, C#, Blazor entwickelt und nutzt Docker für eine konsistente Umgebung und Skalierbarkeit.
+0. ## Table of Contents
 
-![Architekturdiagramm des Projekts](path/to/architecture-diagram.png)
+1. [Overview](#overview)
+2. [Features](#features)
+3. [System Requirements](#system-requirements)
+4. [Installation](#installation)
+5. [Usage](#usage)
+6. [Roadmap](#roadmap)
+7. [Contributors](#contributors)
+8. [License](#license)
+9. [ER Diagram](#er-diagram)
+10. [Class Diagram](#class-diagram)
+11. [Project Structure](#project-structure)
+12. [Git Repository](#git-repository)
 
-## Architekturübersicht
+-----------------------------------------------------------------------------------------------------------------------------------------
+1. ## Overview
 
-- **Web-App / Konsole**: Benutzerorientierte Anwendung, als Web-Frontend (mit Blazor) (in C# geschrieben).
-- **User API (REST API)**: RESTful API-Dienst, entwickelt mit .NET 8 und C#. Er verwaltet die gesamte Kommunikation zwischen Frontend und Datenbanken.
-- **RDBMS (MSSQL)**: Relationale Datenbank zur Verwaltung strukturierter Daten, verwaltet über Docker.
-- **NoSQL (Redis)**: NoSQL Key-Value Store für das Caching, die Sitzungsverwaltung und andere Hochleistungsanforderungen.
-- **Docker**: Containerisierte Lösung für eine einfache Bereitstellung und Skalierung. Docker stellt sicher, dass jeder Teil des Systems in seinem eigenen Container läuft, wodurch Abhängigkeiten reduziert und die Wartbarkeit erhöht werden.
+**SIMS (Simple Incident Management System)** is a web-based application designed for managing incidents. Users can create, search, and manage incidents, including adding specific details like date, title, description, and type of incident. Admins can also close incidents to indicate their resolution. The application aims to provide a streamlined and efficient way of tracking and managing incidents.
 
-## Funktionen
+The project utilizes **Blazor** for the front-end UI and **ASP.NET** for the backend, with a REST API handling requests and responses. Entity Framework (EF) is used for mapping data between the system and the **Docker**-hosted database.
 
-- **Benutzerverwaltung**: Erstellen, aktualisieren und verwalten von Benutzerkonten mit gehashter Passwortspeicherung unter Verwendung von Redis.
-- **Datenspeicherung**: MSSQL für relationale Daten mit klar definierten Schemas. Redis wird für High-Speed-Daten-Caching, Key-Value-Speicherung und Authentifizierung verwendet.
-- **Sicherheit**: Passwort-Hashing wird mit SHA-256 durchgeführt, um eine sichere Speicherung der Anmeldeinformationen zu gewährleisten.
-- **Blazor-Integration**: Eine moderne, interaktive Web-Erfahrung mithilfe des Blazor-Frameworks.
-- **Dockerisierte Umgebung**: Alle Dienste laufen innerhalb von Docker-Containern, um die Entwicklung und Bereitstellung zu optimieren.
+2. ## Features
 
-## Voraussetzungen
+- **Incident Creation**: Users can create new incidents by specifying details such as date, title, description, and type of incident.
+- **Incident Search**: Search for incidents by different incident types, allowing for easy filtering and management.
+- **Incident Clousing**: Admins have the ability to mark incidents as closed, ensuring that resolved issues are properly tracked.
+- **User Roles and Login**: The system features role-based access where admins can close incidents, while supporters can create and search for incidents.
 
-- **Docker**: Stellen Sie sicher, dass Docker auf Ihrem System installiert ist. Dieses Projekt verwendet Docker Compose für die Orchestrierung.
-- **.NET 8 SDK**: Installieren Sie die neueste Version des .NET 8 SDK.
-- **Visual Studio oder VS Code**: Bevorzugte IDE für die Entwicklung.
+### Additional Functionality
 
-## Installationsanweisungen
+- **Logging and Error Handling**: Errors are logged to help identify and resolve issues efficiently.
+- **User Interface**: The web UI is created using Blazor, providing a modern and interactive experience for managing incidents.
 
-1. **Repository klonen**
-   ```sh
-   git clone https://github.com/yourusername/yourproject.git
-   cd yourproject
+3. ## System Requirements
+
+- **Operating System**: Windows 10, Linux, macOS
+- **.NET Runtime**: Version 8.0 or higher  (dotnet --version)
+- **Docker**: Docker Desktop for initializing the Docker Compose files
+- **RAM**: Minimum 4 GB
+- **Storage**: Minimum 2 GB free disk space
+
+4. ## Installation
+
+4.1. ## Clone the repository:
+   ```bash
+   git clone https://github.com/is231316/sims
+   ```
+2. Install the required dependencies: 
+   ```bash
+   dotnet restore
+   ```
+3. Build the project:
+   ```bash
+   dotnet build
+   ```
+4. Start Docker: Make sure Docker Desktop is running, and initialize the Docker Compose files as needed. 
+
+5. Create the database and run the first migration:
+   ```bash
+   dotnet ef database update
    ```
 
-2. **Umgebungskonfiguration**
-   - Legen Sie eine `.env`-Datei im Root-Verzeichnis des Projekts an, um Umgebungsvariablen zu konfigurieren.
-   - Konfigurieren Sie die Verbindungszeichenfolgen für MSSQL und Redis.
+5. ## Usage
 
-3. **Container erstellen und ausführen**
-   - Erstellen und starten Sie die Container mithilfe von Docker Compose.
-   ```sh
-   docker-compose up --build
-   ```
+Run the application with the following command:
 
-4. **Zugriff auf die Dienste**
-   - Web-App: [http://localhost:5000](http://localhost:5000)
-   - User API: [http://localhost:7287/api/incidents](http://localhost:7287/api/incidents)
-   - Redis CLI: Verbinden Sie sich über die Kommandozeile mit der Redis-Instanz:
-   ```sh
-   docker exec -it <redis-container-name> redis-cli
-   ```
+```bash
+dotnet run
+```
 
-## Nutzung
+After launching, navigate to the main menu where you can access all features such as creating, searching, and managing incidents.
 
-- **Web-App**: Benutzer können über das in Blazor entwickelte Frontend mit der Anwendung interagieren. Die Anwendung ermöglicht das Incident-Tracking und die Benutzerverwaltung.
-- **Konsolenanwendung**: Alternative Client-Anwendung, die direkt mit der User API für Backend-Operationen kommuniziert.
-- **User API**: Die Kern-Backend-REST-API, die für die Verarbeitung von Anfragen und die Interaktion mit MSSQL und Redis verantwortlich ist.
+6. ## Roadmap
 
-## Wichtige Endpunkte
+- **v1.0**: Initial release with core features:
+  - Creating a Blazor UI
+  - Creating the REST API with ASP.NET
+  - Testing DB connection
+  - Testing data persistence
+  - Whole testing of the application
+  - Adding roles and login feature
+  - Adding search functionality
 
-- **User API**:
-  - `POST /api/incidents`: Erstellt ein neues Incident.
-  - `GET /api/incidents`: Ruft alle Incidents ab.
-  - `POST /api/users/login`: Authentifiziert Benutzer unter Verwendung von Redis für die Sitzungsverwaltung.
+7. ## Contributors
 
-## Docker-Container Übersicht
+- **is231316**: [GitHub Profile](https://github.com/is231316)
+- **Eisenbahno**: Assisted with architecture and tech stack.
 
-- **Web-App/Konsolen-Container**: Hostet die Frontend-Webanwendung oder die Konsolen-App.
-- **User-API-Container**: Hostet die REST-API-Dienste.
-- **MSSQL-Container**: Hostet die relationale Datenbank für strukturierte Daten.
-- **Redis-Container**: Hostet die Redis NoSQL-Datenbank für Caching und Authentifizierung.
+8. ## License
 
-## Verwendete Technologien
+This project is licensed under the MIT License. See the LICENSE file for more details.
+-------------------- wo ist dieses licence file und wie heist es?
 
-- **.NET 8 / C#**: Backend-Entwicklung und API-Dienste.
-- **Blazor**: Frontend-Entwicklung für die Webanwendung.
-- **MSSQL**: Relationale Datenbank für persistente Daten.
-- **Redis**: NoSQL Key-Value Store für Caching und schnelle Datenabfrage.
-- **Docker**: Containerisierung und Orchestrierung.
+9. ## ER Diagram
 
-## Häufige Probleme & Fehlerbehebung
+**Incident**
+| Field           | Description            |
+|-----------------|------------------------|
+| Id              | Primary Key            |
+| incident_date   | Date of Incident       |
+| title           | Incident Title         |
+| description     | Incident Description   |
+| incident_type   | Type of Incident       |
+| is_closed       | Incident Status        |
+| created_at      | Creation Timestamp     |
+| updated_at      | Last Updated Timestamp |
 
-1. **Docker-Netzwerkprobleme**:
-   - Stellen Sie sicher, dass das Docker-Netzwerk korrekt konfiguriert ist, um eine Inter-Container-Kommunikation zu ermöglichen.
+**Redis**
+| Key     | Value    |
+|---------|----------|
+| monika  | password |
+| role    | admin    |
 
-2. **Redis-Verbindung**:
-   - Um die Redis CLI innerhalb des Containers zu öffnen:
-   ```sh
-   docker exec -it <redis-container-name> redis-cli
-   ```
 
-3. **API-Verbindung**:
-   - Überprüfen Sie die API-URL in Ihrer Konfiguration und stellen Sie sicher, dass sie mit den freigegebenen Ports des Docker-Containers übereinstimmt.
 
-## Zukünftige Verbesserungen
+10. ## Class Diagram
 
-- **Benutzerauthentifizierung hinzufügen**: Implementieren Sie JWT für bessere Sicherheitspraktiken.
-- **CI/CD-Pipeline**: Integration mit GitHub Actions für Continuous Integration und Deployment.
-- **Skalierung**: Verwenden Sie Docker Swarm oder Kubernetes, um die Dienste bei Bedarf zu skalieren.
+The following diagram shows the classes and their relationships:
+Class-Diagram.png in the same directory
 
-## Beitrag leisten
 
-Wenn Sie einen Beitrag leisten möchten, senden Sie bitte eine Pull-Anfrage. Issues und Feature-Anfragen sind ebenfalls willkommen.
+11. ## Project Structure (for Incident Management Application)
 
-## Lizenz
+# Main Project Directory
+project_name/
+├── GitHub Actions/            # (Optional) CI/CD configuration files
+├── Projektmappenelemente/     # Project elements (e.g., Visual Studio project files)
+├── Shared/                    # Shared components used across projects
+│   ├── Controllers/           # Controllers for handling requests
+│   │   └── IncidentsController.cs
+│   ├── DbContextFolder/       # Database context for Entity Framework
+│   │   ├── IncidentDbContext.cs
+│   ├── Migrations/            # Migrations for database versioning
+│   │   ├── 20241115204557_InitialCreate.cs
+│   ├── Model/                 # Data models used in the system
+│   │   └── Incident.cs
+│   ├── UserUtils/             # User utilities (e.g., password management)
+│   │   └── PasswordManagement.cs
+│   ├── appsettings.json       # Application settings
+│   ├── docker-compose.yml     # Docker compose configuration
+│   ├── Program.cs             # Main entry point for the shared components
+│   └── Shared.http            # HTTP client requests (optional)
 
-Dieses Projekt steht unter der MIT-Lizenz - siehe LICENSE-Datei für Details.
+# Blazor Front-End
+SimsUI/
+├── wwwroot/                   # Static files for Blazor (CSS, JS, images)
+├── Components/                # Blazor components for UI structure
+│   ├── Layout/
+│   │   ├── MainLayout.razor   # Main layout for the application
+│   │   ├── NavMenu.razor      # Navigation menu component
+├── Pages/                     # Blazor pages for individual UI views
+│   ├── Error.razor            # Error handling page
+│   ├── Home.razor             # Homepage
+│   ├── Incident.razor         # Incident management page
+│   ├── Search.razor           # Search functionality page
+│   ├── _Imports.razor         # Common imports for all pages
+│   ├── App.razor              # Main application component
+│   ├── Routes.razor           # Application routing configuration
+├── appsettings.json           # Application settings for the front-end
+├── Program.cs                 # Main entry point for the Blazor application
 
-## Kontakt
+12. ## Git Repository
 
-- **Autor**: GÖSLBAUER Monika
-- **E-Mail**: is231316@fhstp.ac.at
+Find the complete source code on GitHub: [Git Repository](https://github.com/is231316/sims)
 
-## Danksagungen
-
-- **Redis und MSSQL Images**: Offizielle Docker Hub Images für Redis und MSSQL.
-- **Docker**: Für das Bereitstellen eines fantastischen Containerisierungstools.
+git init - Initializes a new Git repository.
+git clone [URL] - Clones a repository from a remote server to your local machine.
+git add [file] - Adds changes in a file to the staging area (or use git add . to add all changes).
+git commit -m "message" - Commits the staged changes to the repository with a descriptive commit message.
+git status - Shows the status of changes in the working directory and staging area.
+git branch - Lists, creates, or deletes branches.
+git merge [branch-name] - Merges changes from a specified branch into the current branch.
+git pull - Fetches changes from a remote repository and merges them into your local branch.
+git push - Pushes committed changes from your local repository to a remote repository.
 
