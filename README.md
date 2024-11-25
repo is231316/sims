@@ -92,7 +92,6 @@ After launching, navigate to the main menu where you can access all features suc
 8. ## License
 
 This project is licensed under the MIT License. See the LICENSE file for more details.
--------------------- wo ist dieses licence file und wie heist es?
 
 9. ## ER Diagram
 
@@ -165,14 +164,4 @@ SimsUI/
 12. ## Git Repository
 
 Find the complete source code on GitHub: [Git Repository](https://github.com/is231316/sims)
-
-git init - Initializes a new Git repository.
-git clone [URL] - Clones a repository from a remote server to your local machine.
-git add [file] - Adds changes in a file to the staging area (or use git add . to add all changes).
-git commit -m "message" - Commits the staged changes to the repository with a descriptive commit message.
-git status - Shows the status of changes in the working directory and staging area.
-git branch - Lists, creates, or deletes branches.
-git merge [branch-name] - Merges changes from a specified branch into the current branch.
-git pull - Fetches changes from a remote repository and merges them into your local branch.
-git push - Pushes committed changes from your local repository to a remote repository.
 
